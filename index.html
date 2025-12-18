@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <i class="fas fa-heartbeat logo-icon"></i>
+                <h1>Diabetes Prediction System</h1>
+                <p class="subtitle">AI-Powered Health Assessment</p>
+            </div>
+
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-grid">
+                <!-- Input Form -->
+                <div class="card input-section">
+                    <div class="card-header">
+                        <i class="fas fa-user-md"></i>
+                        <h2>Patient Information</h2>
+                    </div>
+                    <form id="predictionForm" class="prediction-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="pregnancies">
+                                    <i class="fas fa-baby"></i> Pregnancies
+                                    <span class="tooltip" title="Number of times pregnant">ⓘ</span>
+                                </label>
+                                <input type="number" id="pregnancies" name="Pregnancies" 
+                                       min="0" max="20" step="1" value="0" required>
+                                <small>Range: 0-17</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="glucose">
+                                    <i class="fas fa-tint"></i> Glucose (mg/dL)
+                                    <span class="tooltip" title="Plasma glucose concentration">ⓘ</span>
+                                </label>
+                                <input type="number" id="glucose" name="Glucose" 
+                                       min="0" max="200" step="1" value="120" required>
+                                <small>Normal: 70-140</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bloodPressure">
+                                    <i class="fas fa-heart-pulse"></i> Blood Pressure (mm Hg)
+                                    <span class="tooltip" title="Diastolic blood pressure">ⓘ</span>
+                                </label>
+                                <input type="number" id="bloodPressure" name="BloodPressure" 
+                                       min="0" max="150" step="1" value="80" required>
+                                <small>Normal: 60-90</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="skinThickness">
+                                    <i class="fas fa-ruler"></i> Skin Thickness (mm)
+                                    <span class="tooltip" title="Triceps skin fold thickness">ⓘ</span>
+                                </label>
+                                <input type="number" id="skinThickness" name="SkinThickness" 
+                                       min="0" max="100" step="1" value="20" required>
+                                <small>Range: 0-99</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="insulin">
+                                    <i class="fas fa-syringe"></i> Insulin (μU/mL)
+                                    <span class="tooltip" title="2-Hour serum insulin">ⓘ</span>
+                                </label>
+                                <input type="number" id="insulin" name="Insulin" 
+                                       min="0" max="900" step="1" value="80" required>
+                                <small>Range: 0-846</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bmi">
+                                    <i class="fas fa-weight"></i> BMI (kg/m²)
+                                    <span class="tooltip" title="Body mass index">ⓘ</span>
+                                </label>
+                                <input type="number" id="bmi" name="BMI" 
+                                       min="0" max="70" step="0.1" value="25.0" required>
+                                <small>Normal: 18.5-24.9</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dpf">
+                                    <i class="fas fa-dna"></i> Diabetes Pedigree Function
+                                    <span class="tooltip" title="Family history of diabetes">ⓘ</span>
+                                </label>
+                                <input type="number" id="dpf" name="DiabetesPedigreeFunction" 
+                                       min="0" max="3" step="0.001" value="0.5" required>
+                                <small>Range: 0.078-2.42</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="age">
+                                    <i class="fas fa-calendar"></i> Age (years)
+                                    <span class="tooltip" title="Age in years">ⓘ</span>
+                                </label>
+                                <input type="number" id="age" name="Age" 
+                                       min="1" max="120" step="1" value="30" required>
+                                <small>Range: 21-81</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="model">
+                                <i class="fas fa-brain"></i> Select ML Model
+                            </label>
+                            <select id="model" name="model" class="model-select">
+                                <option value="Random Forest">Random Forest (Recommended)</option>
+                                <option value="XGBoost">XGBoost</option>
+                                <option value="Logistic Regression">Logistic Regression</option>
+                                <option value="SVM">Support Vector Machine</option>
+                                <option value="Gradient Boosting">Gradient Boosting</option>
+                                <option value="K-Nearest Neighbors">K-Nearest Neighbors</option>
+                                <option value="Decision Tree">Decision Tree</option>
+                                <option value="Naive Bayes">Naive Bayes</option>
+                            </select>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-magic"></i> Predict
+                            </button>
+                            <button type="button" id="predictAllBtn" class="btn btn-secondary">
+                                <i class="fas fa-layer-group"></i> Compare All Models
+                            </button>
+                            <button type="reset" class="btn btn-outline">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Results Section -->
+                <div class="card results-section" id="resultsSection" style="display: none;">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i>
+                        <h2>Prediction Results</h2>
+                    </div>
+                    <div id="resultsContent">
+                        <!-- Results will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- All Models Comparison -->
+                <div class="card all-models-section" id="allModelsSection" style="display: none;">
+                    <div class="card-header">
+                        <i class="fas fa-layer-group"></i>
+                        <h2>All Models Comparison</h2>
+                    </div>
+                    <div id="allModelsContent">
+                        <!-- All models results will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Diabetes Prediction System | Powered by Machine Learning & AI</p>
+            <p class="disclaimer">
+                <i class="fas fa-exclamation-circle"></i> 
+                This is a screening tool. Please consult a healthcare professional for diagnosis.
+            </p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing your data...</p>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
